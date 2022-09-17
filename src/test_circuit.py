@@ -18,7 +18,7 @@ measurements = qiskit_sim.run_circuit_and_measure(circ, 1000)
 print(measurements.get_counts())
 
 
-class PauliSandwichBackend(QuantumBackend):
+class PauliSandwichBackend(QiskitSimulator):
     def __init__(self, U, bread_gates, inner_backend):
         self.U = U
         self.bread_gates = bread_gates
@@ -35,7 +35,7 @@ class PauliSandwichBackend(QuantumBackend):
                     op_indices = operation.qubit_indices
                     control_qubit_index = circuit.num_qubits + n_sandwiches
                     controlled_P_qubits = (control_qubit_index,) = data_qubit_indices
-                    Pprime = U(*op_indices) * P * U.gate.dagger(*op_indices)
+                    Pprime = U(*op_indices) * P * U.gate.dagger(*op_indices) # make this run faster
                     new_circuit += Pprime.gate.controlled(1)(*controlled_p_qubits)
             else:
                 new_circuit += operation
