@@ -5,7 +5,9 @@ To install to the repository, run the following commands from your CLI:
 ```sh
 git clone git@github.com:AthenaCaesura/HtN-Test-Circuit.git
 cd HtN-Test-Circuit
-pip install .
+# pip install .
+poetry install
+
 ```
 
 From there you can run the tests by calling
@@ -15,3 +17,4 @@ python src/test_circuit.py
 from the CLI.
 
 The results of the test are explained in `src/test_circuit.py`.
+
