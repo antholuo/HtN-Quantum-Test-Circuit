@@ -33,7 +33,7 @@ class PauliSandwichBackend(QiskitSimulator):
         for operation in circuit.operations:
             if operation.gate is self.U:
                 for P in self.bread_gates:
-                    n_swandwiches +=1
+                    n_sandwiches +=1
                     op_indices = operation.qubit_indices
                     control_qubit_index = circuit.num_qubits + n_sandwiches
                     controlled_P_qubits = (control_qubit_index,) + data_qubit_indices
