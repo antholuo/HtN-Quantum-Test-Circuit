@@ -72,7 +72,7 @@ class PauliSandwichBackend(QiskitSimulator):
                     Pprime_matrix =  _U.matrix * P.matrix *  _U_prime.matrix # make this run faster
                     print("P:")
                     print(Pprime_matrix)
-                    Pprime = MatrixFactoryGate("P", Pprime_matrix, (), 2, is_hermitian=True)
+                    Pprime = CustomGateDefinition("P'", Pprime_matrix, ())()
                     new_circuit += Pprime.controlled(1)(*controlled_P_qubits)
             else:
                 new_circuit += operation
