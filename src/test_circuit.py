@@ -84,7 +84,7 @@ class PauliSandwichBackend(QiskitSimulator):
                 new_circuit += operation
         operation = new_circuit.operations[0]
         print(operation)
-        print(operation.gate.wrapped_gate.gate)
+        print(operation.gate.wrapped_gate)
         print(type(operation.gate.wrapped_gate))
         print(operation.gate.wrapped_gate.gate.matrix_factory)
         print(type(operation.gate.wrapped_gate.gate.matrix_factory))
