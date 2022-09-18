@@ -81,7 +81,7 @@ class PauliSandwichBackend(QiskitSimulator):
         return Measurements.from_counts(sandwiched_counts)
 
 # from orquestra.quantum.backends import PauliSandwichBackend
-bread_gates = [XX, ZZ]
+bread_gates = [CNOT]
 sandwiched_qiskit_backend = PauliSandwichBackend(CNOT, bread_gates, qiskit_sim)
 measurements = sandwiched_qiskit_backend.run_circuit_and_measure(circ, 1000)
 
