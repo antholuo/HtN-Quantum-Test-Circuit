@@ -21,7 +21,7 @@ print(measurements.get_counts())
 class PauliSandwichBackend(QiskitSimulator):
     def __init__(self, U, bread_gates, inner_backend):
         print("init", U, bread_gates, inner_backend)
-        # U is going to be a circuit 
+        # U is going to be a gate operation (at this point, CNOT)
         self.U = U
 
         # bread gates is going to be a bunch of Circuits/gates (not super sure)
@@ -40,8 +40,7 @@ class PauliSandwichBackend(QiskitSimulator):
                     op_indices = operation.qubit_indices
                     control_qubit_index = circuit.n_qubits + n_sandwiches
                     controlled_P_qubits = (control_qubit_index,) + data_qubit_indices
-                    Pprime = self.U(*op_indices).gate * P  
-                    Pprime *= self.U.gate.dagger(*op_indices) # make this run faster
+                    Pprime = self.U(*op_indices).gate * P * self.U.gate.dagger(*op_indices) # make this run faster
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
             else:
                 new_circuit += operation
@@ -59,7 +58,7 @@ class PauliSandwichBackend(QiskitSimulator):
 
 # sandwiched_qiskit_backend = PauliSandwichBackend(CNOT, None, qiskit_sim)
 pauli_bread_gates = [X, Z]
-sandwiched_qiskit_backend = PauliSandwichBackend(CNOT, pauli_bread_gates, qiskit_sim)
+sandwiched_qiskit_backend = PauliSandwichBackend(CNOT(0, 1), pauli_bread_gates, qiskit_sim)
 measurements = sandwiched_qiskit_backend.run_circuit_and_measure(circ, 1000)
 
 # after sandwiching, we should have no errors
