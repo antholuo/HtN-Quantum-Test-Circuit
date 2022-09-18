@@ -59,6 +59,7 @@ class PauliSandwichBackend(QiskitSimulator):
                     Pprime = (
                         _U.matrix * P.matrix * _U_prime_matrix
                     )  # make this run faster
+                    ic(Pprime)
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
                     new_circuit += P.gate.controlled(1)(*controlled_P_qubits)
             else:
