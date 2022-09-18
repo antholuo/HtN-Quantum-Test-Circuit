@@ -1,7 +1,7 @@
 import qiskit.providers.aer.noise as noise
 from orquestra.integrations.qiskit.simulator import QiskitSimulator
-from orquestra.quantum.circuits import CNOT, Circuit, X, Z, XX, ZZ, MatrixFactoryGate, CustomGateDefinition
-from orquestra.integrations.qiskit.conversions import _export_controlled_gate, _export_custom_gate
+from orquestra.quantum.circuits import CNOT, Circuit, X, Z, XX, ZZ, MatrixFactoryGate, CustomGateDefinition, ControlledGate
+from orquestra.integrations.qiskit.conversions import _export_controlled_gate, _export_custom_gate, qiskit_qubit
 import qiskit
 
 error = noise.depolarizing_error(0.1, 2)
@@ -87,6 +87,51 @@ class PauliSandwichBackend(QiskitSimulator):
         operation = new_circuit.operations[0]
         gate_op = operation
         q_circuit = qiskit.QuantumCircuit(circuit.n_qubits)
+        def _export_controlled_gate(gate, applied_qubit_indices, n_qubits_in_circuit, custom_names):
+            if not isinstance(gate, ControlledGate):
+                # Raising an exception here is redundant to the type hint, but it allows us
+                # to handle exporting all gates in the same way, regardless of type
+                raise ValueError(f"Can't export gate {gate} as a controlled gate")
+
+            target_indices = applied_qubit_indices[gate.num_control_qubits :]
+            target_gate, _, _ = _export_gate_to_qiskit(
+                gate.wrapped_gate,
+                applied_qubit_indices=target_indices,
+                n_qubits_in_circuit=n_qubits_in_circuit,
+                custom_names=custom_names,
+            )
+            controlled_gate = target_gate.control(gate.num_control_qubits)
+            qiskit_qubits = [
+                qiskit_qubit(qubit_i, n_qubits_in_circuit) for qubit_i in applied_qubit_indices
+            ]
+            return controlled_gate, qiskit_qubits, []
+
+        def _export_custom_gate(gate, applied_qubit_indices, n_qubits_in_circuit, custom_names):
+            if gate.name not in custom_names:
+                raise ValueError(
+                    f"Can't export gate {gate} as a custom gate, the circuit is missing its "
+                    "definition"
+                )
+
+            if gate.params:
+                raise ValueError(
+                    f"Can't export parametrized gate {gate}, Qiskit doesn't support "
+                    "parametrized custom gates"
+                )
+            # At that time of writing it Qiskit doesn't support parametrized gates defined with
+            # a symbolic matrix.
+            # See https://github.com/Qiskit/qiskit-terra/issues/4751 for more info.
+
+            qiskit_qubits = [
+                qiskit_qubit(qubit_i, n_qubits_in_circuit) for qubit_i in applied_qubit_indices
+            ]
+            qiskit_matrix = np.array(gate.matrix)
+            return (
+                qiskit.extensions.UnitaryGate(qiskit_matrix, label=gate.name),
+                qiskit_qubits,
+                [],
+            )
+
 
         def _export_gate_to_qiskit(gate, applied_qubit_indices, n_qubits_in_circuit, custom_names):
             try:
