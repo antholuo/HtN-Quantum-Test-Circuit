@@ -1,6 +1,6 @@
 import qiskit.providers.aer.noise as noise
 from orquestra.integrations.qiskit.simulator import QiskitSimulator
-from orquestra.quantum.circuits import CNOT, Circuit, X, Z, XX, ZZ, MatrixFactoryGate, CustomGateDefinition
+from orquestra.quantum.circuits import CNOT, Circuit, X, Z, XX, ZZ, MatrixFactoryGate, CustomGateDefinition, CustomGateMatrixFactory
 
 error = noise.depolarizing_error(0.1, 2)
 
@@ -73,6 +73,8 @@ class PauliSandwichBackend(QiskitSimulator):
                     print("P:")
                     print(Pprime_matrix)
                     Pprime = CustomGateDefinition("P'", Pprime_matrix, ())()
+                    print(isinstance(Pprime, MatrixFactoryGate))
+                    print(isinstance(Pprime, CustomGateMatrixFactory))
                     new_circuit += Pprime.controlled(1)(*controlled_P_qubits)
                     new_circuit += operation
                     new_circuit += P.controlled(1)(*controlled_P_qubits)
