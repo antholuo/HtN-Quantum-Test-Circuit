@@ -82,9 +82,11 @@ class PauliSandwichBackend(QiskitSimulator):
 
             else:
                 new_circuit += operation
-        print(new_circuit)
-        print(new_circuit.operations)
-        print([type(op) for op in new_circuit.operations])
+        operation = new_circuit.operations[0]
+        print(operation.gate)
+        print(type(operation.gate))
+        print(operation.gate.matrix_factory)
+        print(type(operation.gate.matrix_factory))
 
         print(new_circuit.collect_custom_gate_definitions())
         raw_meas = self.inner_backend.run_circuit_and_measure(new_circuit, n_samples)
