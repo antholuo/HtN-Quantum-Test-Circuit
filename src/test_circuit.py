@@ -45,7 +45,14 @@ class PauliSandwichBackend(QiskitSimulator):
                     print(type(self.U(*op_indices).gate))
                     print("Dagger:")
                     print(type(self.U(*op_indices).gate.dagger))
-                    Pprime = self.U(*op_indices) * P * self.U(*op_indices).gate.dagger # make this run faster
+                    print("U.gate.dagger:")
+                    try:
+                        print(type(self.U.gate.dagger))
+                    except:
+                        pass
+                    print("Lifted matrix:")
+                    print(type(self.U(*op_indices).lifted_matrix(new_circuit.n_qubits)))
+                    Pprime = self.U(*op_indices).lifted_matrix(new_circuit.n_qubits) * P * self.U(*op_indices).gate.dagger # make this run faster
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
             else:
                 new_circuit += operation
