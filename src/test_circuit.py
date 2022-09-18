@@ -73,8 +73,8 @@ class PauliSandwichBackend(QiskitSimulator):
                     print("P:")
                     print(Pprime_matrix)
                     Pprime = CustomGateDefinition("P'", Pprime_matrix, ())()
-                    print(isinstance(Pprime, MatrixFactoryGate))
-                    print(isinstance(Pprime, CustomGateMatrixFactory))
+                    print(type(Pprime.gate))
+                    print(type(Pprime.matrix_factory))
                     new_circuit += Pprime.controlled(1)(*controlled_P_qubits)
                     new_circuit += operation
                     new_circuit += P.controlled(1)(*controlled_P_qubits)
