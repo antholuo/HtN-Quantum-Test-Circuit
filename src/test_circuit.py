@@ -59,14 +59,17 @@ class PauliSandwichBackend(QiskitSimulator):
 
                     # _U = self.U(*op_indices).gate
                     _U = self.U(*op_indices).gate
-                    _U_prime_matrix = _U.gate.dagger
+                    _U_prime = _U.dagger
                     print("U:")
-                    print(_U)
+                    print(_U.matrix)
+                    print(type(_U))
                     print("P:")
                     print(P.matrix)
+                    print(type(P))
                     print("U':")
-                    print(_U_prime_matrix)
-                    Pprime_matrix =  _U.matrix * P.matrix *  _U_prime.matrix # make this run faster
+                    print(_U_prime.matrix)
+                    print(type(_U_prime))
+                    Pprime_matrix =  _U.matrix * P *  _U_prime.matrix # make this run faster
                     Pprime = MatrixFactoryGate("P'", Pprime_matrix, (), 2, is_hermitian=True)
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
             else:
