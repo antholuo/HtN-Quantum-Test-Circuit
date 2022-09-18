@@ -1,6 +1,8 @@
 import qiskit.providers.aer.noise as noise
 from orquestra.integrations.qiskit.simulator import QiskitSimulator
 from orquestra.quantum.circuits import CNOT, Circuit, X, Z, XX, ZZ, MatrixFactoryGate, CustomGateDefinition
+from qeqiskit.conversions import _export_controlled_gate, _export_custom_gate
+import qiskit
 
 error = noise.depolarizing_error(0.1, 2)
 
@@ -83,6 +85,26 @@ class PauliSandwichBackend(QiskitSimulator):
             else:
                 new_circuit += operation
         operation = new_circuit.operations[0]
+        gate_op = operation
+        q_circuit = qiskit.QuantumCircuit(circuit.n_qubits)
+
+        def _export_gate_to_qiskit(gate, applied_qubit_indices, n_qubits_in_circuit, custom_names):
+            try:
+                return _export_controlled_gate(
+                    gate, applied_qubit_indices, n_qubits_in_circuit, custom_names)
+            except ValueError:
+                pass
+
+            return _export_custom_gate(
+                gate, applied_qubit_indices, n_qubits_in_circuit, custom_names
+            )
+
+        _export_gate_to_qiskit(
+            gate_op.gate,
+            applied_qubit_indices=gate_op.qubit_indices,
+            n_qubits_in_circuit=circuit.n_qubits,
+            custom_names={},
+        )
         print(operation)
         print(operation.gate.wrapped_gate)
         print(type(operation.gate.wrapped_gate))
