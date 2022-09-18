@@ -65,7 +65,7 @@ class PauliSandwichBackend(QiskitSimulator):
                     print("P:")
                     print(P.matrix)
                     print("U':")
-                    print(_U_prime.matrix)
+                    print(_U_prime_matrix)
                     Pprime =  _U.matrix * P.matrix *  _U_prime_matrix # make this run faster
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
             else:
