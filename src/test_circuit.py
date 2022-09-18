@@ -1,7 +1,7 @@
 import qiskit.providers.aer.noise as noise
 from orquestra.integrations.qiskit.simulator import QiskitSimulator
 from orquestra.quantum.circuits import CNOT, Circuit, X, Z, XX, ZZ, MatrixFactoryGate, CustomGateDefinition
-from qeqiskit.conversions import _export_controlled_gate, _export_custom_gate
+from orquestra.integrations.qiskit.conversions import _export_controlled_gate, _export_custom_gate
 import qiskit
 
 error = noise.depolarizing_error(0.1, 2)
