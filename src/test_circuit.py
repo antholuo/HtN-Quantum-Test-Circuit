@@ -77,6 +77,7 @@ class PauliSandwichBackend(QiskitSimulator):
             else:
                 new_circuit += operation
 
+        print(new_circuit.collect_custom_gate_definitions())
         raw_meas = self.inner_backend.run_circuit_and_measure(new_circuit, n_samples)
 
         raw_counts  = raw_meas.get_counts()
