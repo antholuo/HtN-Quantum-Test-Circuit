@@ -59,7 +59,7 @@ class PauliSandwichBackend(QiskitSimulator):
 
                     # _U = self.U(*op_indices).gate
                     _U = self.U(*op_indices).gate
-                    _U_prime = _U.dagger
+                    _U_prime_matrix = _U.matrix.inv()
                     print("U:")
                     print(_U.matrix)
                     print(type(_U))
@@ -67,13 +67,13 @@ class PauliSandwichBackend(QiskitSimulator):
                     print(P.matrix)
                     print(type(P))
                     print("U':")
-                    print(_U_prime.matrix)
-                    print(type(_U_prime))
-                    Pprime_matrix =  _U.matrix * P.matrix *  _U_prime.matrix # make this run faster
+                    print(_U_prime_matrix)
+                    print(type(_U_prime_matrix))
+                    Pprime_matrix =  _U.matrix * P.matrix *  _U_prime_matrix # make this run faster
                     print("P:")
                     print(Pprime_matrix)
                     Pprime = CustomGateDefinition("P'", Pprime_matrix, ())()
-                    pprime_controlled_op = Pprime.controlled(1)(*controlled_P_qubits)
+                    pprime_controlled_op = Pprime.controlled(1)(*controlled_P_qubits).wrapped_gate
                     # print(type(pprime_controlled_op.gate))
                     # print(type(pprime_controlled_op.matrix_factory))
                     new_circuit += pprime_controlled_op
@@ -83,10 +83,10 @@ class PauliSandwichBackend(QiskitSimulator):
             else:
                 new_circuit += operation
         operation = new_circuit.operations[0]
-        print(operation.gate)
-        print(type(operation.gate))
-        print(operation.gate.matrix_factory)
-        print(type(operation.gate.matrix_factory))
+        print(operation.wrapped_gate.gate)
+        print(type(operation.wrapped_gate.gate))
+        print(operation.wrapped_gate.gate.matrix_factory)
+        print(type(operation.wrapped_gate.gate.matrix_factory))
 
         print(new_circuit.collect_custom_gate_definitions())
         raw_meas = self.inner_backend.run_circuit_and_measure(new_circuit, n_samples)
