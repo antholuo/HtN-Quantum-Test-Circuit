@@ -1,4 +1,5 @@
 import qiskit.providers.aer.noise as noise
+from icecream import ic
 from orquestra.integrations.qiskit.simulator import QiskitSimulator
 from orquestra.quantum.circuits import CNOT, Circuit, X, Z
 
@@ -36,11 +37,15 @@ class PauliSandwichBackend(QiskitSimulator):
         for operation in circuit.operations:
             if operation.gate is self.U:
                 for P in self.bread_gates:
+                    ic(operation)
+                    ic(P)
                     n_sandwiches +=1
                     op_indices = operation.qubit_indices
                     control_qubit_index = circuit.n_qubits + n_sandwiches
                     controlled_P_qubits = (control_qubit_index,) + data_qubit_indices
                     Pprime = self.U(*op_indices).gate * P * self.U.gate.dagger(*op_indices) # make this run faster
+                    Pprime = P;
+                    
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
                     new_circuit += operation
                     new_circuit += P.gate.controlled(1)(*controlled_P_qubits)
