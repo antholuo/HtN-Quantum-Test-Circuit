@@ -41,6 +41,8 @@ class PauliSandwichBackend(QiskitSimulator):
                     ic(operation)
                     ic(operation.gate)
                     ic(P)
+                    ic(operation.gate)
+                    ic(operation.gate.dagger)
                     continue
                     n_sandwiches +=1
                     op_indices = operation.qubit_indices
