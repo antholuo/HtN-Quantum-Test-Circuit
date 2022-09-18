@@ -1,6 +1,7 @@
 import qiskit.providers.aer.noise as noise
 from orquestra.integrations.qiskit.simulator import QiskitSimulator
 from orquestra.quantum.circuits import CNOT, Circuit, X, Z, XX, ZZ, MatrixFactoryGate, CustomGateDefinition, ControlledGate
+from icecream import ic
 
 error = noise.depolarizing_error(0.1, 2)
 
@@ -21,12 +22,20 @@ print(measurements.get_counts())
 class PauliSandwichBackend(QiskitSimulator):
     def __init__(self, U: GateOperator, bread_gates: list[MatrixFactoryGate], inner_backend: QuantumSimulator):
         print("init", U, bread_gates, inner_backend)
+
+        # U is gate type that we want to sandwich
         self.U = U
+
+        # bread gates is array of gates that will be applied on either side?
         self.bread_gates = bread_gates
+
+        # inner qiskit/orquestra backend
         self.inner_backend = inner_backend
 
     def run_circuit_and_measure(self, circuit: Circuit, n_samples: int):
         data_qubit_indices = tuple(range(circuit.n_qubits))
+
+        # new empty circuit that we will copy into
         new_circuit = Circuit([])
         n_sandwiches = 0
 
@@ -55,7 +64,7 @@ class PauliSandwichBackend(QiskitSimulator):
         for key in raw_counts.keys():
             if "1" not in key[:circuit.n_qubits]:
                 sandwiched_counts[key[:circuit.n_qubits]] = raw_counts[key]
-        return Measurements.from_counts(sandwiched_counts)
+        return measurements.from_counts(sandwiched_counts)
 
 # from orquestra.quantum.backends import PauliSandwichBackend
 bread_gates = [CNOT]
