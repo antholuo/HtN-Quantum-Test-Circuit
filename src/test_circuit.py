@@ -1,7 +1,6 @@
 import qiskit.providers.aer.noise as noise
 from orquestra.integrations.qiskit.simulator import QiskitSimulator
 from orquestra.quantum.circuits import CNOT, Circuit, X, Z, XX, ZZ, MatrixFactoryGate, CustomGateDefinition, ControlledGate
-from orquestra.integrations.qiskit.conversions import qiskit_qubit
 import qiskit
 
 error = noise.depolarizing_error(0.1, 2)
@@ -87,6 +86,10 @@ class PauliSandwichBackend(QiskitSimulator):
         operation = new_circuit.operations[0]
         gate_op = operation
         q_circuit = qiskit.QuantumCircuit(circuit.n_qubits)
+        def qiskit_qubit(index: int, num_qubits_in_circuit: int) -> qiskit.circuit.Qubit:
+            return qiskit.circuit.Qubit(
+                qiskit.circuit.QuantumRegister(num_qubits_in_circuit, "q"), index
+            )
         def _export_controlled_gate(gate, applied_qubit_indices, n_qubits_in_circuit, custom_names):
             if not isinstance(gate, ControlledGate):
                 # Raising an exception here is redundant to the type hint, but it allows us
