@@ -1,6 +1,6 @@
 import qiskit.providers.aer.noise as noise
 from orquestra.integrations.qiskit.simulator import QiskitSimulator
-from orquestra.quantum.circuits import CNOT, Circuit, X
+from orquestra.quantum.circuits import CNOT, Circuit, X, Z
 
 error = noise.depolarizing_error(0.1, 2)
 
@@ -52,8 +52,8 @@ class PauliSandwichBackend(QiskitSimulator):
         return Measurements.from_counts(sandwiched_counts)
 
 # from orquestra.quantum.backends import PauliSandwichBackend
-
-sandwiched_qiskit_backend = PauliSandwichBackend(CNOT, None, qiskit_sim)
+bread_gates = [X, Z]
+sandwiched_qiskit_backend = PauliSandwichBackend(CNOT, bread_gates, qiskit_sim)
 measurements = sandwiched_qiskit_backend.run_circuit_and_measure(circ, 1000)
 
 # after sandwiching, we should have no errors
