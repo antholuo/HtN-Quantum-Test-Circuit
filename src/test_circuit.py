@@ -59,7 +59,7 @@ class PauliSandwichBackend(QiskitSimulator):
 
                     # _U = self.U(*op_indices).gate
                     _U = self.U(*op_indices)
-                    _U_prime = _U.dagger.gate
+                    _U_prime = MatrixFactoryGate("U'", _U.gate.dagger, 2, is_hermetian=True)(*op_indices)
                     print("U:")
                     print(_U)
                     print("P:")
