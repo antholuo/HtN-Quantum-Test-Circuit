@@ -43,14 +43,22 @@ class PauliSandwichBackend(QiskitSimulator):
                     ic(P)
                     ic(operation.gate)
                     ic(operation.gate.dagger)
-                    n_sandwiches +=1
+
+                    n_sandwiches += 1
                     op_indices = operation.qubit_indices
                     control_qubit_index = circuit.n_qubits + n_sandwiches
                     controlled_P_qubits = (control_qubit_index,) + data_qubit_indices
-                    Pprime = operation.gate * P * operation.gate.dagger# make this run faster
-                    
+
+                    _U = self.U(*op_indices).gate.dagger
+                    _U_prime_matrix = _U.matrix.inv()
+                    ic(_U)
+                    ic(_U_prime_matrix)
+
+                    # Pprime = operation.gate * P * operation.gate.dagger# make this run faster
+                    Pprime = (
+                        _U.matrix * P.matrix * _U_prime_matrix
+                    )  # make this run faster
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
-                    new_circuit += operation
                     new_circuit += P.gate.controlled(1)(*controlled_P_qubits)
             else:
                 new_circuit += operation
@@ -58,12 +66,13 @@ class PauliSandwichBackend(QiskitSimulator):
         # runs on their inner backend our new circuit (i.e. our run_circuit_and_measure is a pre-processor)
         raw_meas = self.inner_backend.run_circuit_and_measure(new_circuit, n_samples)
 
-        raw_counts  = raw_meas.get_counts()
+        raw_counts = raw_meas.get_counts()
         sandwiched_counts = {}
         for key in raw_counts.keys():
-            if "1" not in key[:circuit.n_qubits]:
-                sandwiched_counts[key[:circuit.n_qubits]] = raw_counts[key]
+            if "1" not in key[: circuit.n_qubits]:
+                sandwiched_counts[key[: circuit.n_qubits]] = raw_counts[key]
         return measurements.from_counts(sandwiched_counts)
+
 
 # from orquestra.quantum.backends import PauliSandwichBackend
 
