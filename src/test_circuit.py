@@ -52,6 +52,7 @@ class PauliSandwichBackend(QiskitSimulator):
                     _U = self.U(*op_indices).gate.dagger
                     _U_prime_matrix = _U.matrix.inv()
                     ic(_U)
+                    ic(_U.matrix)
                     ic(_U_prime_matrix)
 
                     # Pprime = operation.gate * P * operation.gate.dagger# make this run faster
