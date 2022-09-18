@@ -34,36 +34,38 @@ class PauliSandwichBackend(QiskitSimulator):
             if operation.gate is self.U:
                 for P in self.bread_gates:
                     n_sandwiches +=1
-                    print("operation:")
-                    print(operation)
-                    print(type(operation))
+                    # print("operation:")
+                    # print(operation)
+                    # print(type(operation))
                     op_indices = operation.qubit_indices
                     control_qubit_index = circuit.n_qubits + n_sandwiches
                     controlled_P_qubits = (control_qubit_index,) + data_qubit_indices
-                    print("U:")
-                    print(type(self.U))
-                    print("U:")
-                    print(type(self.U))
-                    print("U():")
-                    print(type(self.U(*op_indices)))
-                    print("P:")
-                    print(type(P))
-                    print("gate:")
-                    print(type(self.U(*op_indices).gate))
-                    print("Dagger:")
-                    print(type(self.U(*op_indices).gate.dagger))
-                    print("U.gate.dagger:")
-                    try:
-                        print(type(self.U.gate.dagger))
-                    except:
-                        pass
-                    print("N qubits")
-                    print(new_circuit.n_qubits)
-                    print(type(new_circuit.n_qubits))
+                    # print("U:")
+                    # print(type(self.U))
+                    # print("U:")
+                    # print(type(self.U))
+                    # print("U():")
+                    # print(type(self.U(*op_indices)))
+                    # print("P:")
+                    # print(type(P))
+                    # print("gate:")
+                    # print(type(self.U(*op_indices).gate))
+                    # print("Dagger:")
+                    # print(type(self.U(*op_indices).gate.dagger))
+                    # print("U.gate.dagger:")
+                    # print("N qubits")
+                    # print(new_circuit.n_qubits)
+                    # print(type(new_circuit.n_qubits))
 
-                    _U = self.U(*op_indices).gate.matrix
+                    _U = self.U(*op_indices).gate
                     _U_prime = self.U(*op_indices).gate.dagger
-                    Pprime =  _U * P.matrix *  _U_prime.matrix # make this run faster
+                    print("U:")
+                    print(_U.matrix)
+                    print("P:")
+                    print(P.matrix)
+                    print("U':")
+                    print(_U_prime.matrix)
+                    Pprime =  _U.matrix * P.matrix *  _U_prime.matrix # make this run faster
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
             else:
                 new_circuit += operation
