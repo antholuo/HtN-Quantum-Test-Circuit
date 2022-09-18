@@ -1,6 +1,6 @@
 import qiskit.providers.aer.noise as noise
 from orquestra.integrations.qiskit.simulator import QiskitSimulator
-from orquestra.quantum.circuits import CNOT, Circuit, XX, ZZ
+from orquestra.quantum.circuits import CNOT, Circuit, X, Z, XX, ZZ
 
 error = noise.depolarizing_error(0.1, 2)
 
