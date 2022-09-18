@@ -61,7 +61,9 @@ class PauliSandwichBackend(QiskitSimulator):
                     print(new_circuit.n_qubits)
                     print(type(new_circuit.n_qubits))
 
-                    Pprime = self.U(*op_indices).gate.matrix * P * self.U(*op_indices).gate.dagger # make this run faster
+                    _U = self.U(*op_indices).gate.matrix
+                    _U_prime = self.U(*op_indices).gate.dagger
+                    Pprime =  _U * P.matrix() *  _U_prime.matrix() # make this run faster
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
             else:
                 new_circuit += operation
