@@ -60,8 +60,7 @@ class PauliSandwichBackend(QiskitSimulator):
                     print("N qubits")
                     print(new_circuit.n_qubits)
                     print(type(new_circuit.n_qubits))
-                    print("Lifted matrix:")
-                    print(type(self.U(*op_indices).lifted_matrix(new_circuit.n_qubits)))
+
                     Pprime = self.U(*op_indices).gate.matrix() * P * self.U(*op_indices).gate.dagger # make this run faster
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
             else:
