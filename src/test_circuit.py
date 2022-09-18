@@ -35,7 +35,7 @@ class PauliSandwichBackend(QiskitSimulator):
                 for P in self.bread_gates:
                     n_sandwiches +=1
                     op_indices = operation.qubit_indices
-                    control_qubit_index = circuit.num_qubits + n_sandwiches
+                    control_qubit_index = circuit.n_qubits + n_sandwiches
                     controlled_P_qubits = (control_qubit_index,) + data_qubit_indices
                     Pprime = self.U(*op_indices) * P * self.U(*op_indices).gate.dagger # make this run faster
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
