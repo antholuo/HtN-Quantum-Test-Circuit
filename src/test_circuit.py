@@ -58,7 +58,7 @@ class PauliSandwichBackend(QiskitSimulator):
 
 # sandwiched_qiskit_backend = PauliSandwichBackend(CNOT, None, qiskit_sim)
 pauli_bread_gates = [X, Z]
-sandwiched_qiskit_backend = PauliSandwichBackend(CNOT(0, 1), pauli_bread_gates, qiskit_sim)
+sandwiched_qiskit_backend = PauliSandwichBackend(CNOT, pauli_bread_gates, qiskit_sim)
 measurements = sandwiched_qiskit_backend.run_circuit_and_measure(circ, 1000)
 
 # after sandwiching, we should have no errors
