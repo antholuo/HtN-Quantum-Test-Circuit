@@ -58,15 +58,15 @@ class PauliSandwichBackend(QiskitSimulator):
                     # print(type(new_circuit.n_qubits))
 
                     # _U = self.U(*op_indices).gate
-                    _U = operation.gate
-                    _U_prime = self.U(*op_indices).gate.dagger
+                    _U = self.U(*op_indices).gate.dagger
+                    _U_prime_matrix = _U.matrix.inv()
                     print("U:")
                     print(_U.matrix)
                     print("P:")
                     print(P.matrix)
                     print("U':")
                     print(_U_prime.matrix)
-                    Pprime =  _U.matrix * P.matrix *  _U_prime.matrix # make this run faster
+                    Pprime =  _U.matrix * P.matrix *  _U_prime_matrix # make this run faster
                     new_circuit += Pprime.gate.controlled(1)(*controlled_P_qubits)
             else:
                 new_circuit += operation
@@ -81,7 +81,7 @@ class PauliSandwichBackend(QiskitSimulator):
         return Measurements.from_counts(sandwiched_counts)
 
 # from orquestra.quantum.backends import PauliSandwichBackend
-bread_gates = [X, Z]
+bread_gates = [X.dagger(2), Z.dagger(2)]
 sandwiched_qiskit_backend = PauliSandwichBackend(CNOT, bread_gates, qiskit_sim)
 measurements = sandwiched_qiskit_backend.run_circuit_and_measure(circ, 1000)
 
