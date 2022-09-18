@@ -37,7 +37,7 @@ class PauliSandwichBackend(QiskitSimulator):
                     print("operation:")
                     print(operation)
                     print(type(operation))
-                    pass
+                    continue
                     op_indices = operation.qubit_indices
                     control_qubit_index = circuit.n_qubits + n_sandwiches
                     controlled_P_qubits = (control_qubit_index,) + data_qubit_indices
