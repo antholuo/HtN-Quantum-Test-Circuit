@@ -39,6 +39,7 @@ class PauliSandwichBackend(QiskitSimulator):
                 for P in self.bread_gates:
                     print("this is an output")
                     ic(operation)
+                    ic(operation.gate)
                     ic(P)
                     continue
                     n_sandwiches +=1
