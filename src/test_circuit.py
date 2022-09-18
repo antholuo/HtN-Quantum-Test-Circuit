@@ -58,7 +58,7 @@ class PauliSandwichBackend(QiskitSimulator):
                     # print(type(new_circuit.n_qubits))
 
                     # _U = self.U(*op_indices).gate
-                    _U = self.U(*op_indices)
+                    _U = self.U(*op_indices).gate
                     _U_prime_matrix = _U.gate.dagger
                     print("U:")
                     print(_U)
