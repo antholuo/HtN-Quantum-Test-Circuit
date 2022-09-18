@@ -138,11 +138,13 @@ class PauliSandwichBackend(QiskitSimulator):
 
         def _export_gate_to_qiskit(gate, applied_qubit_indices, n_qubits_in_circuit, custom_names):
             try:
+                print("EXPORTED CONTROLLED GATE")
                 return _export_controlled_gate(
                     gate, applied_qubit_indices, n_qubits_in_circuit, custom_names)
             except ValueError:
                 pass
 
+            print("EXPORTED CUSTOM GATE")
             return _export_custom_gate(
                 gate, applied_qubit_indices, n_qubits_in_circuit, custom_names
             )
