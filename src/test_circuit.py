@@ -74,14 +74,17 @@ class PauliSandwichBackend(QiskitSimulator):
                     print(Pprime_matrix)
                     Pprime = CustomGateDefinition("P'", Pprime_matrix, ())()
                     pprime_controlled_op = Pprime.controlled(1)(*controlled_P_qubits)
-                    print(type(pprime_controlled_op.gate))
-                    print(type(pprime_controlled_op.matrix_factory))
+                    # print(type(pprime_controlled_op.gate))
+                    # print(type(pprime_controlled_op.matrix_factory))
                     new_circuit += pprime_controlled_op
                     new_circuit += operation
                     new_circuit += P.controlled(1)(*controlled_P_qubits)
 
             else:
                 new_circuit += operation
+        print(new_circuit)
+        print(new_circuit.operations)
+        print([type(op) for op in new_circuit.operations])
 
         print(new_circuit.collect_custom_gate_definitions())
         raw_meas = self.inner_backend.run_circuit_and_measure(new_circuit, n_samples)
