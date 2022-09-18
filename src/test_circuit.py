@@ -52,7 +52,7 @@ class PauliSandwichBackend(QiskitSimulator):
         for key in raw_counts.keys():
             if "1" not in key[:circuit.n_qubits]:
                 sandwiched_counts[key[:circuit.n_qubits]] = raw_counts[key]
-        return Measurements.from_counts(sandwiched_counts)
+        return measurements.from_counts(sandwiched_counts)
 
 # from orquestra.quantum.backends import PauliSandwichBackend
 
